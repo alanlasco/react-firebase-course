@@ -12,6 +12,7 @@ export const NameList = () => {
     const [lista, setLista] = useState<tnombre[]>([]);
     const [edicion, setEdicion] = useState<boolean>(false);
     const [id, setId] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
     const editar = (item:tnombre) =>{
         setEdicion(true);
@@ -21,12 +22,19 @@ export const NameList = () => {
 
     const addNombre = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
+        if(!nombre.trim()){ //evalua si el campo tiene contenido
+            console.log("El campo nombre esta vacio.");
+            setError("El campo nombre esta vacio");
+            return
+        }
+
         const nuevoNombre = {
             id:uniqid(),
             n: nombre
         }
         setLista([...lista, nuevoNombre]);
         setNombre('');
+        setError('');
     }
     const deleteNombre = (id: string) =>{
         const nArray = lista.filter( item => item.id !==id)
@@ -38,6 +46,7 @@ export const NameList = () => {
         setLista(newArray);
         setEdicion(false);
         setNombre('');
+
 
     }
 
@@ -75,6 +84,17 @@ export const NameList = () => {
                 value={edicion ? 'EDITAR NOMBRE' : 'Registrar Nombre'} />
                 </div>
             </form>            
+            {
+                error != '' ? (
+                    <div className='alert alert-danger'>
+                        {error}
+                    </div>
+                ):
+                (
+                    <div></div>
+                )
+
+            }
             </div>
         </div>
     
