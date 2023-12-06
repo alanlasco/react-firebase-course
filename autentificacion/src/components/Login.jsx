@@ -54,14 +54,14 @@ const loginUsuario = (e) => {
                       <input 
                       className='btn btn-dark btn-block mt-4' type="submit" value="Registrar Usuario" />
                   </div>
-                  <div
-                  onClick={loginUsuario} 
-                  className='d-grid gap-2 mt-4'>
-                    <button className='btn btn-success'>
-                        Iniciar Sesion
-                    </button>
-                  </div>
         </form>
+              <div
+                  onClick={loginUsuario}
+                  className='d-grid gap-2 mt-4'>
+                  <button className='btn btn-success'>
+                      Iniciar Sesion
+                  </button>
+              </div>        
         {
 
             msgerror != null ? (
