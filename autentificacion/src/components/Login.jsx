@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import fire from '../firebaseconfig';
 
 
@@ -23,6 +23,21 @@ export const Login = () => {
             }
         })
     }
+    //para checkear los errores mirar la consola y pegar en el codigo
+
+
+const loginUsuario = (e) => {
+    const auth = getAuth(fire);
+    signInWithEmailAndPassword(auth, email, pass)
+    .then((r) => console.log(r))
+    .catch((error) =>{
+        console.log(error);
+        if (error.code == 'auth/invalid-credential') {
+            setMsgerror('Contraseña incorrecta'); //no fue necesario lo comprueba el html
+        }
+    })
+
+}    
   return (
     <div className='row mt-5'>
         <div className='col'></div>
@@ -38,6 +53,13 @@ export const Login = () => {
                   <div className='d-grid gap-2'>
                       <input 
                       className='btn btn-dark btn-block mt-4' type="submit" value="Registrar Usuario" />
+                  </div>
+                  <div
+                  onClick={loginUsuario} 
+                  className='d-grid gap-2 mt-4'>
+                    <button className='btn btn-success'>
+                        Iniciar Sesion
+                    </button>
                   </div>
         </form>
         {
