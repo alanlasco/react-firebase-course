@@ -1,18 +1,23 @@
 import React, {useState} from 'react'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import fire from '../firebaseconfig';
-
+import {useNavigate} from  'react-router-dom';
 
 export const Login = () => {
+    const historial = useNavigate();
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
     const [msgerror, setMsgerror] = useState(null)
 
     const registrarUsuario = (e) =>{
+
         const auth= getAuth(fire);
         e.preventDefault();
             createUserWithEmailAndPassword(auth, email, pass)
-           .then(r => alert('Se registro'))
+           .then(r => {
+            
+            historial('/');
+            alert('Se registro')})
             .catch(e => {
             console.log(e)
             if (e.code == 'auth/invalid-email'){
@@ -29,7 +34,9 @@ export const Login = () => {
 const loginUsuario = (e) => {
     const auth = getAuth(fire);
     signInWithEmailAndPassword(auth, email, pass)
-    .then((r) => console.log(r))
+    .then((r) => {
+        historial('/');
+        console.log(r)})
     .catch((error) =>{
         console.log(error);
         if (error.code == 'auth/invalid-credential') {
