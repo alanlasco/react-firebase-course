@@ -8,7 +8,17 @@ function App() {
   const [phone, setPhone] = useState('');
   const [usuario, setUsuario] = useState([]);
   const [error, setError] = useState('');
-  const store = getFirestore(fire);
+
+
+  useEffect (()=>{
+    const getUsuarios = async () =>{
+      const store = getFirestore(fire);
+      const data = await getDocs(collection(store, "agenda"));
+      const array = data.docs.map(item => ({id:item.id, ...item.data()})); // item seria como un puntero
+      // En este código, data.docs es una propiedad de QuerySnapshot que representa una matriz de documentos en la colección.Ahora deberías poder utilizar.map() en data.docs para crear el array que necesitas.
+      setUsuario(array);
+  }
+getUsuarios();},[]);
 
   const setUsuarios = async (e) =>{
     const store = getFirestore(fire);
@@ -27,6 +37,10 @@ function App() {
         phone: phone
       });
       console.log('se añadio');
+      const dataGet = await getDocs(collection(store, "agenda"));
+      const array = dataGet.docs.map(item => ({ id: item.id, ...item.data() })); // item seria como un puntero
+      // En este código, data.docs es una propiedad de QuerySnapshot que representa una matriz de documentos en la colección.Ahora deberías poder utilizar.map() en data.docs para crear el array que necesitas.
+      setUsuario(array);
 
     }catch(e){
       console.log(e)
@@ -68,7 +82,21 @@ function App() {
         </div>
         <div className="col">
           <h2>Agenda</h2>
-
+          <ul>
+            {
+              usuario.length !== 0 ? (
+                usuario.map(item => (
+                  <li key={item.id}>{item.name} -- {item.phone} </li>
+                ))
+              )
+                :
+                (
+                  <span>
+                    No hay usuarios en la agenda
+                  </span>
+                )
+            }
+          </ul>
         </div>
 
       </div>
