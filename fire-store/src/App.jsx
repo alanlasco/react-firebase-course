@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import fire from './firestoreconfig.js';
 import './App.css';
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, deleteField, doc, deleteDoc } from "firebase/firestore";
 
 function App() {
   const [nombre, setNombre] = useState('');
@@ -49,6 +49,20 @@ getUsuarios();},[]);
     setPhone('');
 
   }
+  const borrarUsuario =  async (id) =>{
+    const store = getFirestore(fire);
+    try {
+     await deleteDoc(doc(store, "agenda", id));
+      const dataGet = await getDocs(collection(store, "agenda"));
+      const array = dataGet.docs.map(item => ({ id: item.id, ...item.data() })); // item seria como un puntero
+      // En este código, data.docs es una propiedad de QuerySnapshot que representa una matriz de documentos en la colección.Ahora deberías poder utilizar.map() en data.docs para crear el array que necesitas.
+      setUsuario(array);
+      
+    } catch (e) {
+      console.log(e);
+      
+    }
+  }
 
   return (
     <div className="container">
@@ -82,11 +96,13 @@ getUsuarios();},[]);
         </div>
         <div className="col">
           <h2>Agenda</h2>
-          <ul>
+          <ul className='list-group'>
             {
               usuario.length !== 0 ? (
                 usuario.map(item => (
-                  <li key={item.id}>{item.name} -- {item.phone} </li>
+                  <li className='list-group-item' key={item.id}>{item.name} -- {item.phone} <button 
+                  onClick={(id)=>{borrarUsuario(item.id)}}
+                  className='btn btn-danger float-end'>Borrar</button></li>
                 ))
               )
                 :
